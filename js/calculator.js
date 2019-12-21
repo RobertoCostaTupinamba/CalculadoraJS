@@ -1,5 +1,4 @@
-let calculator = new CalcController(); 
+window.calculator = new CalcController(); 
 
-//calculadora.dataAtual(new Date().toLocaleDateString("pt-BR"));
 
 
