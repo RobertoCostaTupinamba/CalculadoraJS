@@ -7,6 +7,7 @@ class CalcController {
     this._timeEl = document.querySelector("#hora");
     this._locale;
     this._currentDate;
+    this._operation = [];
     this.initialize();
     this.initButtonsEvents();
   }
@@ -18,13 +19,79 @@ class CalcController {
       this.setDisplayDateTime();
     }, 1000);
   }
-  //Criando um escutador de eventos para que possa reagir a eventos diferentes e não a um unico
-  addEventListenerAll(element, events, fn){
-
-    events.split(' ').forEach(event => {
+  //Criando um escutador de eventos (Generico) para que possa reagir a eventos diferentes e não a um unico
+  addEventListenerAll(element, events, fn) {
+    events.split(" ").forEach(event => {
       element.addEventListener(event, fn, false);
     });
+  }
+  //Metodo de limpar tudo AC
+  clearAll() {
+    this._operation = [];
+  }
+  //Metodo de limpar a ultima entrada
+  clearEntry() {
 
+    this._operation.pop();
+
+  }
+  //Metodo para adicionar um operador
+  addOperation(value) {
+
+    this._operation.push(value);
+
+  }
+  //Metodo para setar um erro
+  setError() {
+
+    this.displayCalc = "Error";
+
+  }
+  //Executa a função do Botão
+  execBtn(value) {
+
+    switch (value) {
+      case "ac":
+        this.clearAll();
+        break;
+      case "ce":
+        this.clearEntry();
+        break;
+      case "soma":
+        this.addOperation("soma");
+        break;
+      case "subtracao":
+        this.addOperation("subtracao");
+        break;
+      case "divisao":
+        this.addOperation("divisao");
+        break;
+      case "multiplicacaoo":
+        this.addOperation("multiplicacaoo");
+        break;
+      case "porcento":
+        this.addOperation();
+        break;
+      case "igual":
+        this.clearEntry();
+        break;
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        this.addOperation(parseInt(value))
+        break;
+      default:
+        this.setError();
+        break;
+    }
+    
   }
   //inicializando botões da calculadora
   initButtonsEvents() {
@@ -34,7 +101,8 @@ class CalcController {
     buttons.forEach((btn, index) => {
       //Adiciona um escutador de eventos em cada um deles
       this.addEventListenerAll(btn, "click drag", e => {
-        console.log(btn.className.baseVal.replace("btn-", ""));
+        let textBtn = btn.className.baseVal.replace("btn-", "");
+        this.execBtn(textBtn);
       });
 
       this.addEventListenerAll(btn, "mouseover mouseup mousedown", e => {
@@ -77,11 +145,11 @@ class CalcController {
   }
 
   get displayCalc() {
-    return this.displayCalcEl.innerHTML;
+    return this._displayCalcEl.innerHTML;
   }
 
   set displayCalc(value) {
-    this.displayCalcEl.innerHTML = value;
+    this._displayCalcEl.innerHTML = value;
   }
 
   get currentDate() {
