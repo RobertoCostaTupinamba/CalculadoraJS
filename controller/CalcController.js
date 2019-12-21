@@ -31,25 +31,48 @@ class CalcController {
   }
   //Metodo de limpar a ultima entrada
   clearEntry() {
-
     this._operation.pop();
-
+  }
+  //Metodo para pegar ultima operação feita na calculadora
+  getLastOperation() {
+    return this._operation[this._operation.length - 1];
+  }
+  //Setando o ultimo valor da operação
+  setLastOperation(value){
+    this._operation[this._operation.length - 1] = value
+  }
+  //Metodo para verificar se é um operador
+  isOperator(value) {
+    return ["+", "-", "*", "%", "/"].indexOf(value) > -1;
   }
   //Metodo para adicionar um operador
   addOperation(value) {
-
-    this._operation.push(value);
-
+    //Verificando se a ultima operação é ou não um numero
+    if (isNaN(this.getLastOperation())) {
+      //String
+      if (this.isOperator(value)) {
+        //Trocar o operador
+        this.setLastOperation(value)
+      } else if (isNaN(value)) {
+        //Outra coisa
+      } else {
+        this._operation.push(value);
+      }
+    } else {
+      //Number
+      let newvalue = this.getLastOperation().toString() + value.toString();
+      this.setLastOperation(parseInt(newvalue));
+      
+    }
+    console.log(this._operation);
+    this.displayCalc = this.getLastOperation();
   }
   //Metodo para setar um erro
   setError() {
-
     this.displayCalc = "Error";
-
   }
   //Executa a função do Botão
   execBtn(value) {
-
     switch (value) {
       case "ac":
         this.clearAll();
@@ -58,40 +81,42 @@ class CalcController {
         this.clearEntry();
         break;
       case "soma":
-        this.addOperation("soma");
+        this.addOperation("+");
         break;
       case "subtracao":
-        this.addOperation("subtracao");
+        this.addOperation("-");
         break;
       case "divisao":
-        this.addOperation("divisao");
+        this.addOperation("/");
         break;
       case "multiplicacaoo":
-        this.addOperation("multiplicacaoo");
+        this.addOperation("*");
         break;
       case "porcento":
-        this.addOperation();
+        this.addOperation("%");
         break;
       case "igual":
         this.clearEntry();
         break;
-      case '0':
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-        this.addOperation(parseInt(value))
+      case "ponto":
+        this.addOperation(".");
+        break;
+      case "0":
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9":
+        this.addOperation(parseInt(value));
         break;
       default:
         this.setError();
         break;
     }
-    
   }
   //inicializando botões da calculadora
   initButtonsEvents() {
