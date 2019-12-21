@@ -3,7 +3,20 @@ class CalcController {
     constructor(){
 
         this._displayCalc = "0"; //atributos privatos (utiliza o "_" para representar metodos privados no JS)
-        this._dataAtual; //atributos privatos
+        this._currentDate; //atributos privatos
+        this.initialize();
+    }
+
+
+    initialize(){
+
+        let displayCalcEl = document.querySelector("#display")
+        let dateEl = document.querySelector("#data")
+        let timeEl = document.querySelector("#hora")
+
+        displayCalcEl.innerHTML = "4567";
+        dateEl.innerHTML = new Date().toLocaleDateString("pt-BR");
+        timeEl.innerHTML = new Date().toLocaleTimeString("pt-BR");
 
     }
 
@@ -13,21 +26,21 @@ class CalcController {
 
     }
 
-    set displayCalc(valor){
+    set displayCalc(value){
 
-        this._displayCalc = valor;
+        this._displayCalc = value;
     
     }
 
-    get dataAtual(){
+    get currentDate(){
 
-        return this._dataAtual;
+        return this._currentDate;
 
     }
 
-    set dataAtual(data){
+    set currentDate(date){
         
-        this._dataAtual = data;
+        this._currentDate = date;
 
     }
 
