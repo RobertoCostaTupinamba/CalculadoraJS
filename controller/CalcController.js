@@ -9,6 +9,7 @@ class CalcController {
         this._locale;
         this._currentDate;
         this.initialize();
+        this.initButtonsEvents();
     }
     //inicializando display da calculadora
     initialize(){
@@ -25,8 +26,18 @@ class CalcController {
     //inicializando botões da calculadora
     initButtonsEvents(){
         //Pega todos os botões da calculadora
-        document.querySelectorAll("#buttons > g, #parts > g");
+        let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+        //Corre por todos os botões da calculadora
+        buttons.forEach((btn, index) =>{
+            //Adiciona um escutador de click em cada um deles
+            btn.addEventListener("click", e=>{
 
+                console.log(btn.className.baseVal.replace("btn-",""));
+                
+
+            });
+
+        });
     }
 
     setDisplayDateTime(){
