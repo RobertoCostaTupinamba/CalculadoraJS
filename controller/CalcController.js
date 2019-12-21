@@ -10,8 +10,7 @@ class CalcController {
         this._currentDate;
         this.initialize();
     }
-
-
+    //inicializando display da calculadora
     initialize(){
 
         this.locale = "pt-BR";
@@ -21,6 +20,12 @@ class CalcController {
             this.setDisplayDateTime();
 
         }, 1000);
+
+    }
+    //inicializando botões da calculadora
+    initButtonsEvents(){
+        //Pega todos os botões da calculadora
+        document.querySelectorAll("#buttons > g, #parts > g");
 
     }
 
@@ -34,6 +39,7 @@ class CalcController {
         this.displayTime = this.currentDate.toLocaleTimeString(this.locale);
 
     }
+
 
     get locale(){
 
