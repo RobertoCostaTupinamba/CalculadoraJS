@@ -10,6 +10,7 @@ class CalcController {
     this._operation = [];
     this.initialize();
     this.initButtonsEvents();
+    this.initKeyBoard();
   }
   //inicializando display da calculadora
   initialize() {
@@ -19,6 +20,48 @@ class CalcController {
       this.setDisplayDateTime();
     }, 1000);
   }
+  //Incializando o evento de teclado
+  initKeyBoard(){
+    document.addEventListener('keyup', event =>
+    {
+      switch (event.key) {
+        case "Escape":
+          this.clearAll();
+          break;
+        case "Backspace":
+          this.clearEntry();
+          break;
+        case "+":
+        case "-":
+        case "/":
+        case "*":
+        case "%":
+          this.addOperation(event.key);
+          break;
+        case "Enter":
+        case "=":
+          this.calc();
+          break;
+        case ".":
+        case ",":
+          this.addDot(".");
+          break;
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+          this.addOperation(parseInt(event.key));
+          break;
+      }
+    })
+  }
+
   //Criando um escutador de eventos (Generico) para que possa reagir a eventos diferentes e não a um unico
   addEventListenerAll(element, events, fn) {
     events.split(" ").forEach(event => {
