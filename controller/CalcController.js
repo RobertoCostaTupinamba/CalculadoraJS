@@ -28,22 +28,62 @@ class CalcController {
   //Metodo de limpar tudo AC
   clearAll() {
     this._operation = [];
+    this.displayCalc = 0;
   }
   //Metodo de limpar a ultima entrada
   clearEntry() {
     this._operation.pop();
+    this.displayCalc = this._operation.join("");
+    if (this._operation.length == 0 ) {
+        this.displayCalc= 0;
+    }
   }
   //Metodo para pegar ultima operação feita na calculadora
   getLastOperation() {
     return this._operation[this._operation.length - 1];
   }
   //Setando o ultimo valor da operação
-  setLastOperation(value){
-    this._operation[this._operation.length - 1] = value
+  setLastOperation(value) {
+    this._operation[this._operation.length - 1] = value;
   }
   //Metodo para verificar se é um operador
   isOperator(value) {
     return ["+", "-", "*", "%", "/"].indexOf(value) > -1;
+  }
+  //Metodo para pegar resultados
+  getResult(){
+      try {
+        return eval(this._operation.join(""))
+      } catch (error) {
+        this.setError();
+        return this.displayCalc;
+      } 
+  }
+  //Metodo para calcular
+  calc() {
+    //fazendo calculo de 2 a 2
+    let last = '';
+    if (this._operation.length > 3) {
+        last = this._operation.pop();
+    }
+    let result =  this.getResult();
+    if (last == "%") {
+      result = result / 100;
+      this._operation = [result];
+    } else {
+      this._operation = [result];
+      if (last) {
+          this._operation.push(last)
+      }
+      this.displayCalc = result
+    }
+  }
+  //Metodo responsavel por realizar o push no array(historico da calculadora)
+  pushOperation(value) {
+    this._operation.push(value);
+    if (this._operation.length > 3) {
+      this.calc();
+    }
   }
   //Metodo para adicionar um operador
   addOperation(value) {
@@ -52,20 +92,30 @@ class CalcController {
       //String
       if (this.isOperator(value)) {
         //Trocar o operador
-        this.setLastOperation(value)
-      } else if (isNaN(value)) {
-        //Outra coisa
-      } else {
-        this._operation.push(value);
+        this.setLastOperation(value);
+      }else {
+        this.pushOperation(value);
       }
+    } else if (this.isOperator(value)) {
+      this.pushOperation(value);
     } else {
       //Number
       let newvalue = this.getLastOperation().toString() + value.toString();
-      this.setLastOperation(parseInt(newvalue));
-      
+      this.setLastOperation(newvalue);
     }
     console.log(this._operation);
-    this.displayCalc = this.getLastOperation();
+    this.displayCalc = this._operation.join(""); //join - junta o array em formato de string e o formata do jeito que vc quiser
+  }
+  //Metodo adicionar ponto 
+  addDot(){     
+    let lastOperation = this.getLastOperation();
+    if(typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1 ) return;
+    if(this.isOperator(lastOperation) || !lastOperation ){
+        this.pushOperation("0.");
+    }else{
+        this.setLastOperation(lastOperation.toString() + ".");
+    }
+     this.displayCalc = this._operation.join("");
   }
   //Metodo para setar um erro
   setError() {
@@ -89,17 +139,17 @@ class CalcController {
       case "divisao":
         this.addOperation("/");
         break;
-      case "multiplicacaoo":
+      case "multiplicacao":
         this.addOperation("*");
         break;
       case "porcento":
         this.addOperation("%");
         break;
       case "igual":
-        this.clearEntry();
+        this.calc();
         break;
       case "ponto":
-        this.addOperation(".");
+        this.addDot(".");
         break;
       case "0":
       case "1":
