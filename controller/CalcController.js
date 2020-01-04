@@ -19,6 +19,22 @@ class CalcController {
     setInterval(() => {
       this.setDisplayDateTime();
     }, 1000);
+    this.pasteFromClipBoard();
+  }
+  //Area de trandferencia COPY
+  copyToClipBoard(){
+    let input =  document.createElement('input');
+    input.value = this.displayCalc;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("Copy");
+    input.remove();
+  }
+  //PASTE COLAR
+  pasteFromClipBoard(){
+    document.addEventListener('paste', e =>{
+      this.displayCalc = parseFloat(e.clipboardData.getData('Text'));
+    })
   }
   //Incializando o evento de teclado
   initKeyBoard(){
@@ -58,6 +74,12 @@ class CalcController {
         case "9":
           this.addOperation(parseInt(event.key));
           break;
+        case "c":
+          if (event.ctrlKey) {
+            this.copyToClipBoard();
+          }
+          break
+        
       }
     })
   }
