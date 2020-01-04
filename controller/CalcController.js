@@ -11,6 +11,8 @@ class CalcController {
     this.initialize();
     this.initButtonsEvents();
     this.initKeyBoard();
+    this._audioOnOff = false;
+    this._audio = new Audio ('../sounds/click.mp3')
   }
   //inicializando display da calculadora
   initialize() {
@@ -20,6 +22,22 @@ class CalcController {
       this.setDisplayDateTime();
     }, 1000);
     this.pasteFromClipBoard();
+    document.querySelectorAll('.btn-ac').forEach(btn =>{
+      btn.addEventListener('dblclick', e=>{
+        this.toggleAudio();
+      })
+    })
+  }
+  //Ligar e desligar Audio da calculadora
+  toggleAudio(){
+    this._audioOnOff = !this._audioOnOff;
+  }
+  //Tocar o som
+  playAudio(){
+    if (this._audioOnOff) {
+      this._audio.currentTime = 0;
+      this._audio.play();
+    }
   }
   //Area de trandferencia COPY
   copyToClipBoard(){
@@ -40,6 +58,7 @@ class CalcController {
   initKeyBoard(){
     document.addEventListener('keyup', event =>
     {
+      this.playAudio();
       switch (event.key) {
         case "Escape":
           this.clearAll();
@@ -188,6 +207,7 @@ class CalcController {
   }
   //Executa a função do Botão
   execBtn(value) {
+    this.playAudio();
     switch (value) {
       case "ac":
         this.clearAll();
