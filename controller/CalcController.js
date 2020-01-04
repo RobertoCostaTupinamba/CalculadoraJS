@@ -12,7 +12,7 @@ class CalcController {
     this.initButtonsEvents();
     this.initKeyBoard();
     this._audioOnOff = false;
-    this._audio = new Audio ('../sounds/click.mp3')
+    this._audio = new Audio('../sounds/click.mp3')
   }
   //inicializando display da calculadora
   initialize() {
@@ -22,26 +22,26 @@ class CalcController {
       this.setDisplayDateTime();
     }, 1000);
     this.pasteFromClipBoard();
-    document.querySelectorAll('.btn-ac').forEach(btn =>{
-      btn.addEventListener('dblclick', e=>{
+    document.querySelectorAll('.btn-ac').forEach(btn => {
+      btn.addEventListener('dblclick', e => {
         this.toggleAudio();
       })
     })
   }
   //Ligar e desligar Audio da calculadora
-  toggleAudio(){
+  toggleAudio() {
     this._audioOnOff = !this._audioOnOff;
   }
   //Tocar o som
-  playAudio(){
+  playAudio() {
     if (this._audioOnOff) {
       this._audio.currentTime = 0;
       this._audio.play();
     }
   }
   //Area de trandferencia COPY
-  copyToClipBoard(){
-    let input =  document.createElement('input');
+  copyToClipBoard() {
+    let input = document.createElement('input');
     input.value = this.displayCalc;
     document.body.appendChild(input);
     input.select();
@@ -49,15 +49,14 @@ class CalcController {
     input.remove();
   }
   //PASTE COLAR
-  pasteFromClipBoard(){
-    document.addEventListener('paste', e =>{
+  pasteFromClipBoard() {
+    document.addEventListener('paste', e => {
       this.displayCalc = parseFloat(e.clipboardData.getData('Text'));
     })
   }
   //Incializando o evento de teclado
-  initKeyBoard(){
-    document.addEventListener('keyup', event =>
-    {
+  initKeyBoard() {
+    document.addEventListener('keyup', event => {
       this.playAudio();
       switch (event.key) {
         case "Escape":
@@ -98,7 +97,7 @@ class CalcController {
             this.copyToClipBoard();
           }
           break
-        
+
       }
     })
   }
@@ -118,8 +117,8 @@ class CalcController {
   clearEntry() {
     this._operation.pop();
     this.displayCalc = this._operation.join("");
-    if (this._operation.length == 0 ) {
-        this.displayCalc= 0;
+    if (this._operation.length == 0) {
+      this.displayCalc = 0;
     }
   }
   //Metodo para pegar ultima operação feita na calculadora
@@ -135,29 +134,29 @@ class CalcController {
     return ["+", "-", "*", "%", "/"].indexOf(value) > -1;
   }
   //Metodo para pegar resultados
-  getResult(){
-      try {
-        return eval(this._operation.join(""))
-      } catch (error) {
-        this.setError();
-        return this.displayCalc;
-      } 
+  getResult() {
+    try {
+      return eval(this._operation.join(""))
+    } catch (error) {
+      this.setError();
+      return this.displayCalc;
+    }
   }
   //Metodo para calcular
   calc() {
     //fazendo calculo de 2 a 2
     let last = '';
     if (this._operation.length > 3) {
-        last = this._operation.pop();
+      last = this._operation.pop();
     }
-    let result =  this.getResult();
+    let result = this.getResult();
     if (last == "%") {
       result = result / 100;
       this._operation = [result];
     } else {
       this._operation = [result];
       if (last) {
-          this._operation.push(last)
+        this._operation.push(last)
       }
       this.displayCalc = result
     }
@@ -177,7 +176,7 @@ class CalcController {
       if (this.isOperator(value)) {
         //Trocar o operador
         this.setLastOperation(value);
-      }else {
+      } else {
         this.pushOperation(value);
       }
     } else if (this.isOperator(value)) {
@@ -191,15 +190,15 @@ class CalcController {
     this.displayCalc = this._operation.join(""); //join - junta o array em formato de string e o formata do jeito que vc quiser
   }
   //Metodo adicionar ponto 
-  addDot(){     
+  addDot() {
     let lastOperation = this.getLastOperation();
-    if(typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1 ) return;
-    if(this.isOperator(lastOperation) || !lastOperation ){
-        this.pushOperation("0.");
-    }else{
-        this.setLastOperation(lastOperation.toString() + ".");
+    if (typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1) return;
+    if (this.isOperator(lastOperation) || !lastOperation) {
+      this.pushOperation("0.");
+    } else {
+      this.setLastOperation(lastOperation.toString() + ".");
     }
-     this.displayCalc = this._operation.join("");
+    this.displayCalc = this._operation.join("");
   }
   //Metodo para setar um erro
   setError() {
@@ -309,6 +308,10 @@ class CalcController {
   }
 
   set displayCalc(value) {
+    if (value.toString.length > 10) {
+      this.setError();
+      return false;
+    }
     this._displayCalcEl.innerHTML = value;
   }
 
